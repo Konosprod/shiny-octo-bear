@@ -17,24 +17,33 @@ class MyTCPServerHandler(socketserver.BaseRequestHandler):
             elif data['type'] == "move":
                 moveFile(data['path'], data['filename'])
             elif data['type'] == "remove":
-                print("Remove file")
-            
-            
+                removeFile(data['filename'])
+        
+def removeFile(filename):
+    if filename in files.keys():
+        files.pop(filename)
+        
 def moveFile(path, filename):
     for k in files.keys():
         if k in filename:
             shutil.move(path, files[k] + filename)
-            print("Moving : " + path + " to :" + files[k] + filename)
+            print("Moving : '" + path + "' to : '" + files[k] + filename + "'")
             
 def addFile(path, filename):
-    print("Adding " + filename + " to " + path)
+    print("Adding '" + filename + "' to '" + path + "'")
     files[filename] = path
 
 def loadDict():
-    return 0
+    global files
+    with open('dict.txt', 'r') as fp:
+        try:
+            files = json.load(fp)
+        except ValueError:
+            print("Error loading dict.txt, it may be empty")
     
 def writeDict():
-    return 0
+    with open('dict.txt', 'w') as fp:
+        json.dump(files, fp)
 
 server = MyTCPServer(('127.0.0.1', 13373), MyTCPServerHandler)
 loadDict()
