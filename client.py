@@ -16,7 +16,7 @@ def sendAdd(path, filename):
 
 def sendRemove(filename):
     data = {"type" : "remove", "filename" : filename}
-    print(data)
+
     s.send(bytes(json.dumps(data), 'UTF-8'))
 
 def sendMove(path, filename):

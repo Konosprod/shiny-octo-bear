@@ -35,15 +35,24 @@ def addFile(path, filename):
 
 def loadDict():
     global files
-    with open('dict.txt', 'r') as fp:
+    try:
+        fp = open('dict.txt', 'r')
+        
         try:
             files = json.load(fp)
+            fp.close()  
         except ValueError:
             print("Error loading dict.txt, it may be empty")
+            
+    except FileNotFoundError:
+        fp = open('dict.txt', 'w')
+        fp.close()
     
 def writeDict():
     with open('dict.txt', 'w') as fp:
         json.dump(files, fp)
+        fp.close()
+        
 
 server = MyTCPServer(('127.0.0.1', 13373), MyTCPServerHandler)
 loadDict()
